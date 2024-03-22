@@ -6,34 +6,30 @@ import { ProductElement, SearchPagination, SectionTitle } from "../components";
 const Search = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [products, setProducts] = useState([]);
+  const [totalItems, setTotalItems] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+  const [limit, setLimit] = useState(8); // Number of items per page
+
+  useEffect(() => {
+    handleSearchPagination();
+    window.scrollTo(0, 0);
+  }, [searchTerm]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
     setCurrentPage(1); // Directly set to 1 without prevState, as prevState isn't necessary here
-    setSearchTerm(e.target.elements.search.value); // Direct access to named form elements
-    try {
-    //   const response = await axios(
-    //     `http://localhost:8080/products?q=${e.target.elements.search.value}&_page=${currentPage}`
-    //   );
-        const response = await axios(
-            `http://localhost:9000/products`
-        );
-      setProducts(response.data);
-    } catch (error) {
-      console.log(error.response);
-    }
+    console.log('search termmm', e.target.elements.search.value);
+    setSearchTerm(e.target.elements.search.value);
   };
 
   const handleSearchPagination = async () => {
     try {
-    //   const response = await axios(
-    //     `http://localhost:8080/products?q=${searchTerm}&_page=${currentPage}`
-    //   );
-        const response = await axios(
-            `http://localhost:9000/products`
-        );
-      setProducts(response.data);
+      const response = await axios(
+        `${process.env.REACT_APP_API}/product-page?q=${searchTerm}&_page=${currentPage}&_limit=${limit}`
+      );
+      setProducts(response.data.data); // Assuming the backend sends an object with a 'data' property holding the array of products
+      // Optionally, handle totalItems for pagination controls (e.g., displaying page numbers)
+      setTotalItems(response.data.totalItems);
     } catch (error) {
       console.log(error.response);
     }
@@ -67,14 +63,13 @@ const Search = () => {
         )}
         <Row className="g-4">
           {products.map((product) => (
-            <Col key={product.id} xs={12} sm={6} md={4} lg={3}>
+            <Col key={product._id} xs={12} sm={6} md={4} lg={3}>
               <ProductElement
-                id={product.id}
-                title={product.name}
-                image={product.imageUrl}
+                id={product._id}
+                title={product.title}
+                image={product.images[0].url}
                 rating={product.rating}
-                price={product.price.current.value}
-                brandName={product.brandName}
+                price={product.bulkPricingOptions[0].pricePerUnit}
               />
             </Col>
           ))}
@@ -84,6 +79,8 @@ const Search = () => {
           setCurrentPage={setCurrentPage}
           products={products}
           handleSearchPagination={handleSearchPagination}
+          limit={limit}
+          totalPages={Math.ceil(totalItems/limit)}
         />
       </Container>
     </>

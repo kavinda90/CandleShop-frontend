@@ -13,7 +13,7 @@ export { default as QuantityInput } from "./QuantityInput";
 export { default as SelectSize } from "./SelectSize";
 export { default as SingleProductRating } from "./SingleProductRating";
 export { default as WishItem } from "./WishItem";
-export { default as SearchPagination } from "./SearchPagination";
+export { default as SearchPagination } from "./SearchPagination1";
 export { default as Filters } from "./Filters";
 export { default as FormCheckbox } from "./FormCheckbox";
 export { default as FormInput } from "./FormInput";

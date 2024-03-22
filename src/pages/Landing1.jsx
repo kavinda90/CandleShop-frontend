@@ -6,12 +6,12 @@ import axios from "axios";
 import { Container, Row, Col, Card } from 'react-bootstrap';
 
 export const landingLoader = async () => {
-  const response = await axios(
-    `http://localhost:8080/products?_page=1&_limit=8`
-  );
-  const data = response.data;
+    const response = await axios(
+        `${process.env.REACT_APP_API}/products`
+    );
+    const data = response.data;
 
-  return { products: data };
+    return { products: data };
 };
 
 const Landing = () => {
@@ -28,14 +28,14 @@ const Landing = () => {
           Trending Products
         </h2>
         <Row xs={1} md={2} lg={4} className="g-4">
-          {products.map((product) => (
-            <Col key={product.id}>
+          {products.slice(0, 8).map((product) => (
+            <Col key={product._id}>
               <ProductElement
-                id={product.id}
-                title={product.name}
-                image={product.imageUrl}
+                id={product._id}
+                title={product.title}
+                image={product.images[0].url}
                 rating={product.rating}
-                price={product.price.current.value}
+                price={product.bulkPricingOptions[0].pricePerUnit}
               />
             </Col>
           ))}

@@ -7,6 +7,7 @@ const SearchPagination = ({
   setCurrentPage,
   products,
   handleSearchPagination,
+  limit,
 }) => {
   useEffect(() => {
     handleSearchPagination();
@@ -31,7 +32,7 @@ const SearchPagination = ({
           <button
             className="join-item btn text-4xl flex justify-center"
             onClick={() => {
-              if (products.length < 10) {
+              if (products.length < limit) {
                 return;
               }
 

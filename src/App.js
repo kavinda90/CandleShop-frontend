@@ -15,7 +15,7 @@ import {
   ThankYou,
   OrderHistory
 } from "./pages";
-import { landingLoader } from "./pages/Landing";
+import { landingLoader } from "./pages/Landing1";
 import { singleProductLoader } from "./pages/SingleProduct";
 import { shopLoader } from "./pages/Shop";
 import { ToastContainer } from "react-toastify";
