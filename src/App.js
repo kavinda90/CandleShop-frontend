@@ -1,24 +1,100 @@
-import logo from './logo.svg';
-import './App.css';
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  About,
+  Cart,
+  Contact,
+  HomeLayout,
+  Landing,
+  Login,
+  Register,
+  Shop,
+  SingleProduct,
+  Wishlist,
+  Profile,
+  Search,
+  ThankYou,
+  OrderHistory
+} from "./pages";
+import { landingLoader } from "./pages/Landing";
+import { singleProductLoader } from "./pages/SingleProduct";
+import { shopLoader } from "./pages/Shop";
+import { ToastContainer } from "react-toastify";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <HomeLayout />,
+    children: [
+      {
+        index: true,
+        element: <Landing />,
+        loader: landingLoader,
+      },
+      {
+        path: "shop",
+        element: <Shop />,
+        loader: shopLoader
+
+      },
+      {
+        path: "shop/product/:id",
+        element: <SingleProduct />,
+        loader: singleProductLoader,
+      },
+      {
+        path: "about",
+        element: <About />,
+      },
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "register",
+        element: <Register />,
+      },
+      {
+        path: "contact",
+        element: <Contact />,
+      },
+      {
+        path: "about-us",
+        element: <About />,
+      },
+      {
+        path: "cart",
+        element: <Cart />,
+      },
+      {
+        path: "wishlist",
+        element: <Wishlist />,
+      },
+      {
+        path: "user-profile",
+        element: <Profile />,
+      },
+      {
+        path:"search",
+        element: <Search />
+      },
+      {
+        path:"thank-you",
+        element: <ThankYou />
+      },
+      {
+        path:"order-history",
+        element: <OrderHistory />
+      }
+    ],
+  },
+]);
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <RouterProvider router={router} />
+      <ToastContainer position="top-center" />
+    </>
   );
 }
 
