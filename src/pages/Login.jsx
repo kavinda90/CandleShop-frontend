@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { SectionTitle } from "../components";
-import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
-import { store } from "../store";
-import { loginUser, logoutUser } from "../features/auth/authSlice";
+import React, {useEffect, useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {SectionTitle} from "../components";
+import {toast} from "react-toastify";
+import {useDispatch, useSelector} from "react-redux";
+import {store} from "../store";
+import {loginUser, logoutUser} from "../features/auth/authSlice";
+import "../styles/Login.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -61,11 +62,11 @@ const Login = () => {
   return (
     <>
       <SectionTitle title="Login" path="Home | Login" />
-      <div className="flex flex-col justify-center sm:py-12">
-        <div className="p-10 xs:p-0 mx-auto md:w-full md:max-w-md">
-          <div className="bg-dark border border-gray-600 shadow w-full rounded-lg divide-y divide-gray-200">
-            <form className="px-5 py-7" onSubmit={proceedLogin}>
-              <label className="font-semibold text-sm pb-1 block text-accent-content">
+      <div className="d-flex flex-column justify-content-center py-sm-5">
+        <div className="p-5 mx-auto">
+          <div className="bg-dark border border-secondary w-100 rounded shadow divide-y divide-gray-200">
+            <form className="px-5 py-5" onSubmit={proceedLogin}>
+              <label className="fw-semibold small pb-1 d-block text-white">
                 E-mail
               </label>
               <input
@@ -73,9 +74,9 @@ const Login = () => {
                 required={true}
                 onChange={(e) => setEmail(e.target.value)}
                 type="email"
-                className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                className="border rounded px-3 py-2 mt-1 mb-5 small w-100"
               />
-              <label className="font-semibold text-sm pb-1 block text-accent-content">
+              <label className="fw-semibold small pb-1 d-block text-white">
                 Password
               </label>
               <input
@@ -83,19 +84,19 @@ const Login = () => {
                 required={true}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                className="border rounded px-3 py-2 mt-1 mb-5 small w-100"
               />
               <button
                 type="submit"
-                className="transition duration-200 bg-blue-600 hover:bg-blue-500 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
+                className="text-white w-100 py-2 rounded small fw-semibold text-center d-inline-block btn btn-outline-secondary"
               >
-                <span className="inline-block mr-2">Login</span>
+                <span className="d-inline-block me-2">Login</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  className="w-4 h-4 inline-block"
+                  className="d-inline-block login-arrow"
                 >
                   <path
                     strokeLinecap="round"
@@ -110,7 +111,7 @@ const Login = () => {
           <div className="py-5 text-center">
             <Link
               to="/register"
-              className="btn btn-neutral text-white"
+              className="btn btn-sm btn-outline-secondary"
               onClick={() => window.scrollTo(0, 0)}
             >
               Don't have an account? Please register.
