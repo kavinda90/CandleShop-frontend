@@ -5,7 +5,7 @@ import {toast} from "react-toastify";
 import {useDispatch, useSelector} from "react-redux";
 import {store} from "../store";
 import {loginUser, logoutUser} from "../features/auth/authSlice";
-import "../styles/Login.css";
+import "../styles/User.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -96,7 +96,7 @@ const Login = () => {
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  className="d-inline-block login-arrow"
+                  className="d-inline-block arrow"
                 >
                   <path
                     strokeLinecap="round"
