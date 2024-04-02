@@ -26,8 +26,8 @@ const CustomNavbar = () => {
 
   const logOut = () => {
     dispatch(logoutUser());
-    toast.success("Logged out");
     navigate("/");
+    toast.success("Logged out");
   }
 
   return (
