@@ -1,13 +1,12 @@
 import React, {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {SectionTitle} from "../components";
-import {nanoid} from "nanoid";
 import {toast} from "react-toastify";
 import "../styles/User.css";
 
 const Register = () => {
-  const [name, setName] = useState("");
-  const [lastname, setLastname] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -20,12 +19,12 @@ const Register = () => {
     let isProceed = true;
     let errorMessage = "";
 
-    if (name.length === 0) {
+    if (firstName.length === 0) {
       isProceed = false;
-      errorMessage = "Please enter the value in username field";
-    } else if (lastname.length === 0) {
+      errorMessage = "Please enter the value in first name field";
+    } else if (lastName.length === 0) {
       isProceed = false;
-      errorMessage = "Please enter the value in lastname field";
+      errorMessage = "Please enter the value in last name field";
     } else if (email.length === 0) {
       isProceed = false;
       errorMessage = "Please enter the value in email field";
@@ -34,7 +33,7 @@ const Register = () => {
       errorMessage = "Phone must be longer than 3 characters";
     } else if (address.length < 4) {
       isProceed = false;
-      errorMessage = "Adress must be longer than 3 characters";
+      errorMessage = "Address must be longer than 3 characters";
     } else if (password.length < 6) {
       isProceed = false;
       errorMessage = "Please enter a password longer than 5 characters";
@@ -57,9 +56,8 @@ const Register = () => {
     e.preventDefault();
 
     let regObj = {
-      id: nanoid(),
-      name,
-      lastname,
+      firstName,
+      lastName,
       email,
       phone,
       address,
@@ -68,7 +66,7 @@ const Register = () => {
     };
 
     if (isValidate()) {
-      fetch("http://localhost:8080/user", {
+      fetch("http://localhost:9000/user/profile", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(regObj),
@@ -90,23 +88,23 @@ const Register = () => {
           <div className="bg-dark border border-secondary w-100 rounded shadow divide-y divide-gray-200">
             <form className="px-5 py-5" onSubmit={handleSubmit}>
               <label className="fw-semibold small pb-1 d-block text-white">
-                Name
+                First Name
               </label>
               <input
                 type="text"
                 className="border rounded px-3 py-2 mt-1 mb-5 small w-100"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
                 required={true}
               />
               <label className="fw-semibold small pb-1 d-block text-white">
-                Lastname
+                Last Name
               </label>
               <input
                 type="text"
                 className="border rounded px-3 py-2 mt-1 mb-5 small w-100"
-                value={lastname}
-                onChange={(e) => setLastname(e.target.value)}
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
                 required={true}
               />
               <label className="fw-semibold small pb-1 d-block text-white">

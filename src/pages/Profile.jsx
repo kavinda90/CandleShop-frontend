@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { SectionTitle } from "../components";
+import React, {useEffect, useState} from "react";
+import {SectionTitle} from "../components";
 import axios from "axios";
-import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import {useSelector} from "react-redux";
+import {toast} from "react-toastify";
+import {useNavigate} from "react-router-dom";
 
 const Profile = () => {
   const [id, setId] = useState(localStorage.getItem("id"));
@@ -16,7 +16,7 @@ const Profile = () => {
     lastname: "",
     email: "",
     phone: "",
-    adress: "",
+    address: "",
     password: "",
   });
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const Profile = () => {
         lastname: data.lastname,
         email: data.email,
         phone: data.phone,
-        adress: data.adress,
+        address: data.address,
         password: data.password,
       });
     } catch (error) {
@@ -61,7 +61,7 @@ const Profile = () => {
         lastname: userFormData.lastname,
         email: userFormData.email,
         phone: userFormData.phone,
-        adress: userFormData.adress,
+        address: userFormData.address,
         password: userFormData.password,
         userWishlist: await userObj.userWishlist
         //userWishlist treba da stoji ovde kako bi sacuvao stanje liste zelja
@@ -75,7 +75,7 @@ const Profile = () => {
   return (
     <>
       <SectionTitle title="User Profile" path="Home | User Profile" />
-      <form className="max-w-7xl mx-auto text-center px-10" onSubmit={updateProfile}>
+      <form className="mx-auto text-center px-5" onSubmit={updateProfile}>
         <div className="grid grid-cols-3 max-lg:grid-cols-1">
           <div className="form-control w-full lg:max-w-xs">
             <label className="label">
@@ -131,14 +131,16 @@ const Profile = () => {
 
           <div className="form-control w-full lg:max-w-xs">
             <label className="label">
-              <span className="label-text">Your Adress</span>
+              <span className="label-text">Your Address</span>
             </label>
             <input
               type="text"
               placeholder="Type here"
               className="input input-bordered w-full lg:max-w-xs"
-              value={userFormData.adress}
-              onChange={(e) => {setUserFormData({...userFormData, adress: e.target.value})}}
+              value={userFormData.address}
+              onChange={(e) => {
+                setUserFormData({...userFormData, address: e.target.value})
+              }}
             />
           </div>
 
