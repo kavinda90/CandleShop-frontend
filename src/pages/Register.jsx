@@ -1,9 +1,11 @@
 import React, {useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {SectionTitle} from "../components";
 import {toast} from "react-toastify";
 import "../styles/User.css";
 import axios from "axios";
+import {useDispatch} from "react-redux";
+import {loginUser} from "../features/auth/authSlice";
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -13,8 +15,7 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const isValidate = () => {
     let isProceed = true;
@@ -69,7 +70,7 @@ const Register = () => {
       axios.post("http://localhost:9000/user/profile", regObj)
       .then((res) => {
         toast.success("Registration Successful");
-        navigate("/login");
+        dispatch(loginUser(res.data));
       })
       .catch((err) => {
         toast.error(err.response.data.message || err.message);
@@ -155,7 +156,7 @@ const Register = () => {
                 />
                 <button
                     type="submit"
-                    className="text-white w-100 py-2 rounded small fw-semibold text-center d-inline-block btn btn-outline-secondary"
+                    className="text-white w-100 py-2 rounded small fw-semibold text-center d-inline-block btn btn-outline-secondary px-5"
                 >
                   <span className="d-inline-block me-2">Register</span>
                   <svg

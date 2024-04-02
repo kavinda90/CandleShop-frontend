@@ -3,8 +3,7 @@ import {Link, useNavigate} from "react-router-dom";
 import {SectionTitle} from "../components";
 import {toast} from "react-toastify";
 import {useDispatch, useSelector} from "react-redux";
-import {store} from "../store";
-import {loginUser, logoutUser} from "../features/auth/authSlice";
+import {loginUser} from "../features/auth/authSlice";
 import "../styles/User.css";
 import axios from "axios";
 
@@ -17,20 +16,19 @@ const Login = () => {
 
   useEffect(() => {
     if (loginState) {
-      localStorage.clear();
-      store.dispatch(logoutUser());
+      navigate("/");
     }
-  }, []);
+  }, [loginState]);
 
   const isValidate = () => {
     let isProceed = true;
 
-    if (email.length === 0) {
+    if (!email.length) {
       isProceed = false;
-      toast.warn("Please enter a email");
-    } else if (password.length < 6) {
+      toast.warn("Email is required");
+    } else if (!password.length) {
       isProceed = false;
-      toast.warn("Password must be minimum 6 characters");
+      toast.warn("Password is required");
     }
     return isProceed;
   };
@@ -43,8 +41,7 @@ const Login = () => {
       })
       .then((res) => {
         toast.success("Login successful");
-        localStorage.setItem("id", 'logged');
-        store.dispatch(loginUser());
+        dispatch(loginUser(res.data));
         navigate("/");
       })
       .catch((err) => {
