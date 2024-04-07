@@ -1,168 +1,188 @@
-import React, { useEffect, useState } from "react";
-import { SectionTitle } from "../components";
+import React, {useEffect, useState} from "react";
+import {SectionTitle} from "../components";
 import axios from "axios";
-import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {toast} from "react-toastify";
+import {useNavigate} from "react-router-dom";
+import {updateProfile} from "../features/auth/authSlice";
 
 const Profile = () => {
-  const [id, setId] = useState(localStorage.getItem("id"));
-  const [userData, setUserData] = useState({});
   const loginState = useSelector((state) => state.auth.isLoggedIn);
+  const userProfile = useSelector((state) => state.auth.userProfile);
   const wishItems = useSelector((state) => state.wishlist.wishItems);
-  const [userFormData, setUserFormData] = useState({
-    id: "",
-    name: "",
-    lastname: "",
-    email: "",
-    phone: "",
-    adress: "",
-    password: "",
-  });
+  const [userFormData, setUserFormData] = useState({});
+  const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
-
-  const getUserData = async () => {
-    try {
-      const response = await axios(`http://localhost:8080/user/${id}`);
-      const data = response.data;
-      setUserFormData({
-        name: data.name,
-        lastname: data.lastname,
-        email: data.email,
-        phone: data.phone,
-        adress: data.adress,
-        password: data.password,
-      });
-    } catch (error) {
-      toast.error("Error: ", error.response);
-    }
-  };
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (loginState) {
-      getUserData();
-    } else {
+    if (!loginState) {
       toast.error("You must be logged in to access this page");
       navigate("/");
     }
   }, []);
 
-  const updateProfile = async (e) => {
+  useEffect(() => {
+    setUserFormData(userProfile);
+  }, [userProfile])
+
+  const isValidate = () => {
+    let isProceed = true;
+    let errorMessage = "";
+
+    if (userFormData?.firstName.length === 0) {
+      isProceed = false;
+      errorMessage = "Please enter the value in first name field";
+    } else if (userFormData?.lastName.length === 0) {
+      isProceed = false;
+      errorMessage = "Please enter the value in last name field";
+    } else if (userFormData?.email.length === 0) {
+      isProceed = false;
+      errorMessage = "Please enter the value in email field";
+    } else if (userFormData?.phone.length < 4) {
+      isProceed = false;
+      errorMessage = "Phone must be longer than 3 characters";
+    } else if (userFormData?.address.length < 4) {
+      isProceed = false;
+      errorMessage = "Address must be longer than 3 characters";
+    } else if (userFormData?.password && userFormData?.password.length < 6) {
+      isProceed = false;
+      errorMessage = "Please enter a password longer than 5 characters";
+    } else if (userFormData?.password && userFormData?.password !== confirmPassword) {
+      isProceed = false;
+      errorMessage = "Passwords must match";
+    }
+
+    if (!isProceed) {
+      toast.warn(errorMessage);
+    }
+
+    return isProceed;
+  };
+
+  const updateUserProfile = async (e) => {
     e.preventDefault();
-    try{
 
-      const getResponse = await axios(`http://localhost:8080/user/${id}`);
-      const userObj = getResponse.data;
-
-      // saljemo get(default) request
-      const putResponse = await axios.put(`http://localhost:8080/user/${id}`, {
-        id: id,
-        name: userFormData.name,
-        lastname: userFormData.lastname,
-        email: userFormData.email,
-        phone: userFormData.phone,
-        adress: userFormData.adress,
-        password: userFormData.password,
-        userWishlist: await userObj.userWishlist
-        //userWishlist treba da stoji ovde kako bi sacuvao stanje liste zelja
+    if (isValidate()) {
+      axios.put("http://localhost:9000/user/profile", userFormData)
+      .then((res) => {
+        dispatch(updateProfile(res.data));
+        toast.success("Profile is updated");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message || err.message);
       });
-      const putData = putResponse.data;
-    }catch(error){
-      console.log(error.response);
     }
   }
 
+  const updateField = field => e => {
+    setUserFormData(prevState => {
+      return {
+        ...prevState,
+        [field]: e.target.value
+      }
+    })
+  };
+
+  const updateConfirmPassword = () => e => {
+    setConfirmPassword(e.target.value);
+  };
+
   return (
-    <>
-      <SectionTitle title="User Profile" path="Home | User Profile" />
-      <form className="max-w-7xl mx-auto text-center px-10" onSubmit={updateProfile}>
-        <div className="grid grid-cols-3 max-lg:grid-cols-1">
-          <div className="form-control w-full lg:max-w-xs">
-            <label className="label">
-              <span className="label-text">Your Name</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Type here"
-              className="input input-bordered w-full lg:max-w-xs"
-              value={userFormData.name}
-              onChange={(e) => {setUserFormData({...userFormData, name: e.target.value})}}
-            />
-          </div>
-
-          <div className="form-control w-full lg:max-w-xs">
-            <label className="label">
-              <span className="label-text">Your Lastname</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Type here"
-              className="input input-bordered w-full lg:max-w-xs"
-              value={userFormData.lastname}
-              onChange={(e) => {setUserFormData({...userFormData, lastname: e.target.value})}}
-            />
-          </div>
-
-          <div className="form-control w-full lg:max-w-xs">
-            <label className="label">
-              <span className="label-text">Your Email</span>
-            </label>
-            <input
-              type="email"
-              placeholder="Type here"
-              className="input input-bordered w-full lg:max-w-xs"
-              value={userFormData.email}
-              onChange={(e) => {setUserFormData({...userFormData, email: e.target.value})}}
-            />
-          </div>
-
-          <div className="form-control w-full lg:max-w-xs">
-            <label className="label">
-              <span className="label-text">Your Phone</span>
-            </label>
-            <input
-              type="tel"
-              placeholder="Type here"
-              className="input input-bordered w-full lg:max-w-xs"
-              value={userFormData.phone}
-              onChange={(e) => {setUserFormData({...userFormData, phone: e.target.value})}}
-            />
-          </div>
-
-          <div className="form-control w-full lg:max-w-xs">
-            <label className="label">
-              <span className="label-text">Your Adress</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Type here"
-              className="input input-bordered w-full lg:max-w-xs"
-              value={userFormData.adress}
-              onChange={(e) => {setUserFormData({...userFormData, adress: e.target.value})}}
-            />
-          </div>
-
-          <div className="form-control w-full lg:max-w-xs">
-            <label className="label">
-              <span className="label-text">Your Password</span>
-            </label>
-            <input
-              type="password"
-              placeholder="Type here"
-              className="input input-bordered w-full lg:max-w-xs"
-              value={userFormData.password}
-              onChange={(e) => {setUserFormData({...userFormData, password: e.target.value})}}
-            />
+      <>
+        <SectionTitle title="User Profile" path="Home | User Profile"/>
+        <div className="d-flex flex-column justify-content-center py-sm-5">
+          <div className="p-5 mx-auto">
+            <div className="bg-dark border border-secondary w-100 rounded shadow divide-y divide-gray-200">
+              <form className="px-5 py-5" onSubmit={updateUserProfile}>
+                <label className="fw-semibold small pb-1 d-block text-white">
+                  <span>First Name</span>
+                </label>
+                <input
+                    type="text"
+                    className="border rounded px-3 py-2 mt-1 mb-5 small w-100"
+                    value={userFormData?.firstName}
+                    onChange={updateField('firstName')}
+                />
+                <label className="fw-semibold small pb-1 d-block text-white">
+                  <span>Last Name</span>
+                </label>
+                <input
+                    type="text"
+                    className="border rounded px-3 py-2 mt-1 mb-5 small w-100"
+                    value={userFormData?.lastName}
+                    onChange={updateField('lastName')}
+                />
+                <label className="fw-semibold small pb-1 d-block text-white">
+                  <span>Your Email</span>
+                </label>
+                <input
+                    type="email"
+                    className="border rounded px-3 py-2 mt-1 mb-5 small w-100"
+                    value={userFormData?.email}
+                    onChange={updateField('email')}
+                />
+                <label className="fw-semibold small pb-1 d-block text-white">
+                  <span>Your Phone</span>
+                </label>
+                <input
+                    type="tel"
+                    className="border rounded px-3 py-2 mt-1 mb-5 small w-100"
+                    value={userFormData?.phone}
+                    onChange={updateField('phone')}
+                />
+                <label className="fw-semibold small pb-1 d-block text-white">
+                  <span>Your Address</span>
+                </label>
+                <input
+                    type="text"
+                    className="border rounded px-3 py-2 mt-1 mb-5 small w-100"
+                    value={userFormData?.address}
+                    onChange={updateField('address')}
+                />
+                <label className="fw-semibold small pb-1 d-block text-white">
+                  <span>New Password</span>
+                </label>
+                <input
+                    type="password"
+                    className="border rounded px-3 py-2 mt-1 mb-5 small w-100"
+                    value={userFormData?.password}
+                    onChange={updateField('password')}
+                />
+                <label className="fw-semibold small pb-1 d-block text-white">
+                  <span>Confirm Password</span>
+                </label>
+                <input
+                    type="password"
+                    className="border rounded px-3 py-2 mt-1 mb-5 small w-100"
+                    value={confirmPassword}
+                    onChange={updateConfirmPassword()}
+                />
+                <button
+                    type="submit"
+                    className="text-white w-100 py-2 rounded small fw-semibold text-center d-inline-block btn btn-outline-secondary px-4"
+                >
+                  <span className="d-inline-block me-2">Update Profile</span>
+                  <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      className="d-inline-block arrow"
+                  >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                    />
+                  </svg>
+                </button>
+              </form>
+            </div>
           </div>
         </div>
-        <button
-          className="btn btn-lg bg-blue-600 hover:bg-blue-500 text-white mt-10"
-          type="submit"
-        >
-          Update Profile
-        </button>
-      </form>
-    </>
+      </>
   );
 };
 

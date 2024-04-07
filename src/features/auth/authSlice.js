@@ -1,9 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
+import {createSlice} from "@reduxjs/toolkit";
+import {getCookie, setCookie} from 'react-use-cookie';
 
 const initialState = {
-  userId: localStorage.getItem('id') || false,
-  isLoggedIn: localStorage.getItem('id') ? true : false,
+  isLoggedIn: getCookie('logged') === 'yes',
+  userProfile: JSON.parse(localStorage.getItem('profile')),
   darkMode: true
 };
 
@@ -11,20 +11,31 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    loginUser: (state) => {
+    loginUser: (state, action) => {
       state.isLoggedIn = true;
-      state.userId = localStorage.getItem('id');
+      state.userProfile = action.payload;
+      localStorage.setItem('profile', JSON.stringify(action.payload));
+      setCookie('logged', 'yes', {
+        days: 1,
+      });
     },
     logoutUser: (state) => {
       state.isLoggedIn = false;
-      state.userId = false;
-      toast.success("You have successfuly logout");
+      state.userProfile = null;
+      localStorage.removeItem('profile');
+      setCookie('logged', 'no', {
+        days: 0,
+      });
+    },
+    updateProfile: (state, action) => {
+      state.userProfile = action.payload;
+      localStorage.setItem('profile', JSON.stringify(action.payload));
     },
     changeMode: (state) => {
       state.darkMode = !state.darkMode;
-      if(state.darkMode){
+      if (state.darkMode) {
         document.querySelector('html').setAttribute('data-theme', "dark");
-      }else{
+      } else {
         document.querySelector('html').setAttribute('data-theme', "winter");
       }
     }
@@ -32,6 +43,6 @@ const authSlice = createSlice({
 });
 
 // console.log(cartSlice);
-export const { loginUser, logoutUser, changeMode } = authSlice.actions;
+export const {loginUser, logoutUser, updateProfile, changeMode} = authSlice.actions;
 
 export default authSlice.reducer;
