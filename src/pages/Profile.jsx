@@ -9,7 +9,6 @@ import {updateProfile} from "../features/auth/authSlice";
 const Profile = () => {
   const loginState = useSelector((state) => state.auth.isLoggedIn);
   const userProfile = useSelector((state) => state.auth.userProfile);
-  const wishItems = useSelector((state) => state.wishlist.wishItems);
   const [userFormData, setUserFormData] = useState({});
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
