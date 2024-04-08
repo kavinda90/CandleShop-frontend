@@ -1,11 +1,12 @@
 import React from 'react'
+import { Container } from 'react-bootstrap';
 
 const SectionTitle = ({title, path}) => {
   return (
-    <div className='section-title-div border-b py-10 border-gray-600'>
-        <h1 className='section-title-title text-8xl text-center mb-10 max-md:text-7xl max-sm:text-6xl text-accent-content'>{ title }</h1>
-        <p className='section-title-path text-2xl text-center max-sm:text-xl text-accent-content'>{ path }</p>
-    </div>
+    <Container className="border-bottom py-2 border-secondary" style={{ paddingBottom: '2.5rem', borderBottomColor: '#4B5563' }}>
+      <h1 className="text-center mb-2" style={{ fontSize: '2.5rem' }}>{title}</h1>
+      <p className="text-center" style={{ fontSize: '1rem' }}>{path}</p>
+    </Container>
   )
 }
 

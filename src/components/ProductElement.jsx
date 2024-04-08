@@ -1,34 +1,32 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { LinkContainer } from 'react-router-bootstrap';
+import { Card, Button } from "react-bootstrap";
 import { addToCart } from "../features/cart/cartSlice";
+import '../styles/ProductElement.css'
 
 const ProductElement = ({ id, title, image, rating, price, brandName }) => {
+  const dispatch = useDispatch();
   const product = {
     id, title, image, rating, price, brandName, amount: 1
   };
+
   return (
-    <div className="max-w-2xl">
-      <div className="shadow-md rounded-lg max-w-sm bg-base-100">
-        <Link to={`/shop/product/${id}`} onClick={() => window.scrollTo(0, 0)}>
-          <img
-            className="rounded-t-lg p-8"
-            src={`https://${image}`}
-            alt="product image"
-          />
-        </Link>
-        <div className="px-5 pb-5">
-          <Link to={`/shop/product/${id}`} onClick={() => window.scrollTo(0, 0)}>
-            <h3 className="font-semibold text-xl tracking-tight mb-5 text-accent-content">
-              {title}
-            </h3>
-          </Link>
-          <div className="flex items-center justify-between">
-            <span className="text-3xl font-bold text-accent-content">${price}</span>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Card className="shadow-sm rounded bg-light mb-4" style={{ width: '18rem' }}>
+      <LinkContainer to={`/shop/product/${id}`} style={{ cursor: 'pointer' }}>
+        <Card.Img variant="top" src={process.env.REACT_APP_PUBLIC_URL + `/img/${image}`} alt="product image" style={{ padding: '1rem' }} onClick={() => window.scrollTo(0, 0)} />
+      </LinkContainer>
+      <Card.Body>
+        <LinkContainer to={`/shop/product/${id}`} style={{ cursor: 'pointer' }}>
+          <Card.Title onClick={() => window.scrollTo(0, 0)} className="mb-4 two-line-clamp" style={{ fontWeight: '500', fontSize: '1.25rem' }}>{title}</Card.Title>
+        </LinkContainer>
+        <Card.Text>
+          {/* <div className="d-flex justify-content-between align-items-center"> */}
+            <span className="font-weight-bold" style={{ fontSize: '1.5rem' }}>${price}</span>
+          {/* </div> */}
+        </Card.Text>
+      </Card.Body>
+    </Card>
   );
 };
 

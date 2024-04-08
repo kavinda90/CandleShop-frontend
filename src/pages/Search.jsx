@@ -1,100 +1,89 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Container, Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
 import { ProductElement, SearchPagination, SectionTitle } from "../components";
-import { nanoid } from "nanoid";
 
 const Search = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [products, setProducts] = useState([]);
+  const [totalItems, setTotalItems] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+  const [limit, setLimit] = useState(8); // Number of items per page
+
+  useEffect(() => {
+    handleSearchPagination();
+    window.scrollTo(0, 0);
+  }, [searchTerm]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    setCurrentPage(prevState =>  1);
-    setSearchTerm(prevState => e.target.search.value);
+    setCurrentPage(1); // Directly set to 1 without prevState, as prevState isn't necessary here
+    console.log('search termmm', e.target.elements.search.value);
+    setSearchTerm(e.target.elements.search.value);
+  };
+
+  const handleSearchPagination = async () => {
     try {
       const response = await axios(
-        `http://localhost:8080/products?q=${e.target.search.value}&&_page=${currentPage}`
+        `${process.env.REACT_APP_API}/product-search?q=${searchTerm}&_page=${currentPage}&_limit=${limit}`
       );
-      const data = response.data;
-      setProducts(data);
+      setProducts(response.data.data); // Assuming the backend sends an object with a 'data' property holding the array of products
+      // Optionally, handle totalItems for pagination controls (e.g., displaying page numbers)
+      setTotalItems(response.data.totalItems);
     } catch (error) {
       console.log(error.response);
     }
   };
 
-  const handleSearchPagination = async () => {
-    try {
-        const response = await axios(
-          `http://localhost:8080/products?q=${searchTerm}&&_page=${currentPage}`
-        );
-        const data = response.data;
-        setProducts(data);
-      } catch (error) {
-        console.log(error.response);
-      }
-  }
-
   return (
     <>
       <SectionTitle title="Search" path="Home | Search" />
-      
-      <form
-        className="form-control max-w-7xl mx-auto py-10 px-10"
-        onSubmit={handleSearch}
-      >
-        <div className="input-group">
-          <input
-            type="text"
-            placeholder="Search here…"
-            className="input input-bordered input-lg w-full outline-0 focus:outline-0"
-            name="search"
-          />
-          <button
-            type="submit"
-            className="btn btn-square btn-lg bg-blue-600 hover:bg-blue-500 text-white"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </button>
-        </div>
-      </form>
-      {searchTerm && products.length !== 0 && <h2 className="text-center text-6xl my-10 max-lg:text-4xl max-sm:text-2xl max-sm:my-5 text-accent-content">Showing results for "{searchTerm}"</h2>}
-      {products.length === 0 && searchTerm && <h2 className="text-center text-6xl my-10 max-lg:text-4xl max-sm:text-2xl max-sm:my-5 text-accent-content">No results found for "{searchTerm}"</h2> }
-      <div className="grid grid-cols-4 px-2 max-w-7xl mx-auto gap-y-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 shop-products-grid">
-        {products &&
-          products.map((product) => (
-            <ProductElement
-              key={nanoid()}
-              id={product.id}
-              title={product.name}
-              image={product.imageUrl}
-              rating={product.rating}
-              price={product.price.current.value}
-              brandName={product.brandName}
+      <Container className="py-5">
+        <Form onSubmit={handleSearch}>
+          <InputGroup className="mb-3">
+            <Form.Control
+              type="text"
+              placeholder="Search here…"
+              name="search"
+              aria-describedby="basic-addon2"
             />
-          ))}
+            <Button variant="outline-secondary" type="submit" id="button-addon2">
+              Search
+            </Button>
+          </InputGroup>
+        </Form>
 
-      
-      </div>
-      <SearchPagination
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        products={products}
-        handleSearchPagination={handleSearchPagination}
-      />
+        {searchTerm && products.length !== 0 && (
+          <h2 className="text-center my-3">
+            Showing results for "{searchTerm}"
+          </h2>
+        )}
+        {products.length === 0 && searchTerm && (
+          <h2 className="text-center my-3">No results found for "{searchTerm}"</h2>
+        )}
+        <Row className="g-4">
+          {products.map((product) => (
+            <Col key={product._id} xs={12} sm={6} md={4} lg={3}>
+              <ProductElement
+                key={product._id}
+                id={product._id}
+                title={product.title}
+                image={product.images[0].url}
+                rating={product.rating}
+                price={product.bulkPricingOptions[0].pricePerUnit}
+              />
+            </Col>
+          ))}
+        </Row>
+        <SearchPagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          products={products}
+          handleSearchPagination={handleSearchPagination}
+          limit={limit}
+          totalPages={Math.ceil(totalItems/limit)}
+        />
+      </Container>
     </>
   );
 };

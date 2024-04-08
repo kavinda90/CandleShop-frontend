@@ -1,16 +1,16 @@
+import { Form } from 'react-bootstrap';
+
 const FormCheckbox = ({ label, name, defaultValue, size }) => {
     return (
-      <div className='form-control items-center'>
-        <label htmlFor={name} className='label cursor-pointer'>
-          <span className='label-text capitalize'>{label}</span>
-        </label>
-        <input
-          type='checkbox'
+      <Form.Group controlId={name} className="d-flex align-items-center">
+        <Form.Check
+          type="checkbox"
           name={name}
+          label={<span className="capitalize">{label}</span>}
           defaultChecked={false}
-          className={`checkbox checkbox-primary ${size}`}
+          className={`${size}`} // You may need to adjust this as Bootstrap doesn't directly support 'checkbox-primary' or size classes for checkboxes
         />
-      </div>
+      </Form.Group>
     );
   };
   export default FormCheckbox;

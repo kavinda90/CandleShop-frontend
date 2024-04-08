@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Form } from 'react-bootstrap';
 import DatePicker from "react-datepicker";
 import { FaCalendarDays } from "react-icons/fa6";
 
@@ -9,20 +10,20 @@ import "react-datepicker/dist/react-datepicker-cssmodules.css";
 const FormDatePicker = ({ name, label }) => {
   const [startDate, setStartDate] = useState(new Date("05 October 2010 14:48 UTC"));
   return (
-    <div className="form-control items-center">
-      <label htmlFor={name} className="label">
-        <span className="label-text capitalize">{label}</span>
-      </label>
+    <Form.Group controlId={name} className="d-flex flex-column align-items-center">
+      <Form.Label className="me-2">
+        <span className="capitalize">{label}</span>
+      </Form.Label>
       <DatePicker
         showIcon
         icon={<FaCalendarDays className="mt-1" />}
         selected={startDate}
         onChange={(date) => setStartDate(date)}
-        className="indent-2 text-lg"
+        className="form-control text-lg" // Adjusted to use Bootstrap's 'form-control' class
         id={name}
         name={name}
       />
-    </div>
+    </Form.Group>
   );
 };
 

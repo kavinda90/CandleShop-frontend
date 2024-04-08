@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
+
+import { Container, Accordion, Table, Button } from 'react-bootstrap';
 import { SectionTitle } from "../components";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { nanoid } from "nanoid";
 
 const OrderHistory = () => {
   // cancelled, in progress, delivered
@@ -15,10 +16,10 @@ const OrderHistory = () => {
   const getOrderHistory = async () => {
     try {
       // saljemo get(default) request
-      const response = await axios.get("http://localhost:8080/orders");
+      const response = await axios.get(`${process.env.REACT_APP_API}/orders`);
       const data = response.data;
       setOrders(
-        data.filter((order) => order.userId === localStorage.getItem("id"))
+        data.filter((order) => order.userId === JSON.parse(localStorage.getItem("profile"))._id)
       );
     } catch (error) {
       toast.error(error.response);
@@ -37,92 +38,62 @@ const OrderHistory = () => {
   return (
     <>
       <SectionTitle title="Order History" path="Home | Order History" />
-      <div className="order-history-main max-w-7xl mx-auto mt-10 px-20 max-md:px-10">
-        {orders?.length === 0 ? (
-          <div className="text-center">
-            <h1 className="text-4xl text-accent-content">
-              There are no orders in the order history
-            </h1>
-            <Link
-              to="/shop"
-              className="btn bg-blue-600 hover:bg-blue-500 text-white mt-10"
-            >
-              Make your first order
-            </Link>
-          </div>
-        ) : (
-          orders.map((order) => {
-            return (
-              <div
-                key={nanoid()}
-                className="collapse collapse-plus bg-base-200 mb-2"
-              >
-                <input type="radio" name="my-accordion-3" />
-                <div className="collapse-title text-xl font-medium text-accent-content">
-                  Order {order.id} - {order.orderStatus}
-                </div>
-                <div className="collapse-content">
-                  <div className="overflow-x-auto">
-                    <table className="table max-sm:table-xs table-pin-rows table-pin-cols">
-                      {/* head */}
-                      <thead>
-                        <tr className="text-accent-content">
-                          <th>Order</th>
-                          <th>Image</th>
-                          <th>Name</th>
-                          <th>Size</th>
-                          <th>Amount</th>
-                          <th>Price</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {order.cartItems.map((product, counter) => (
-                          <tr className="text-accent-content" key={nanoid()}>
-                            <th>{counter + 1}</th>
-                            <th><img src={`https://${product.image}`} alt="" className="w-10" /></th>
-                            <td>{product.title}</td>
-                            <td>{product.selectedSize}</td>
-                            <td>{product.amount}</td>
-                            <td>${(product.price * product.amount).toFixed(2)}</td>
-                          </tr>
-                        ))}
-                        <tr>
-                          <td colSpan="5" className="text-center">
-                            <h4 className="text-md text-accent-content">
-                              Subtotal: ${ Math.round(order?.subtotal) }
-                            </h4>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td colSpan="5" className="text-center">
-                            <h3 className="text-md text-accent-content">
-                              Shipping: $50
-                            </h3>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td colSpan="5" className="text-center">
-                            <h3 className="text-md text-accent-content">
-                              Tax: 20%: ${ Math.round(order?.subtotal / 5) }
-                            </h3>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td colSpan="5" className="text-center">
-                            <h3 className="text-xl text-accent-content">
-                              - Order Total: ${ Math.round(order?.subtotal + 50 + (order?.subtotal / 5)) } -
-                            </h3>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            );
-          })
-        )}
-      </div>
+      <Container className="mt-5 px-md-3" style={{ maxWidth: '1140px' }}>
+      {orders?.length === 0 ? (
+        <div className="text-center">
+          <h1>There are no orders in the order history</h1>
+          <Link to="/shop">
+            <Button variant="primary" className="mt-4">Make your first order</Button>
+          </Link>
+        </div>
+      ) : (
+        orders.map((order, index) => (
+          <Accordion defaultActiveKey="0" className="mb-3" key={order._id}>
+            <Accordion.Item eventKey={index.toString()}>
+              <Accordion.Header>Order {order._id} - {order.orderStatus}</Accordion.Header>
+              <Accordion.Body>
+                <Table responsive>
+                  <thead>
+                    <tr>
+                      <th>Order</th>
+                      <th>Image</th>
+                      <th>Name</th>
+                      <th>Size</th>
+                      <th>Amount</th>
+                      <th>Price</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {order.cartItems.map((product, counter) => (
+                      <tr key={product._id}>
+                        <td>{counter + 1}</td>
+                        <td><img src={`${process.env.REACT_APP_PUBLIC_URL}/img/${product.image}`} alt="" style={{ width: '40px' }} /></td>
+                        <td>{product.title}</td>
+                        <td>{product.selectedSize}</td>
+                        <td>{product.amount}</td>
+                        <td>${(product.price * product.amount).toFixed(2)}</td>
+                      </tr>
+                    ))}
+                    <tr>
+                      <td colSpan="6" className="text-center">Subtotal: ${(order?.subtotal).toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                      <td colSpan="6" className="text-center">Shipping: $50.00</td>
+                    </tr>
+                    <tr>
+                      <td colSpan="6" className="text-center">Tax: 20%: ${(order?.subtotal / 5).toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                      <td colSpan="6" className="text-center">Order Total: ${(order?.subtotal + 50 + (order?.subtotal / 5)).toFixed(2)}</td>
+                    </tr>
+                  </tbody>
+                </Table>
+              </Accordion.Body>
+            </Accordion.Item>
+          </Accordion>
+        ))
+      )}
+    </Container>
     </>
   );
 };

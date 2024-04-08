@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { FaCircleArrowLeft } from "react-icons/fa6";
-import { FaCircleArrowRight } from "react-icons/fa6";
+import { Button, Container } from 'react-bootstrap';
+import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
 import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 
 const Pagination = () => {
@@ -15,42 +15,43 @@ const Pagination = () => {
   };
 
   return (
-    <>
-    <div className="pagination flex justify-center mt-10">
-      <div className="join">
-        <button
-          className="join-item btn text-4xl flex justify-center"
+    <div className="d-flex justify-content-center mt-4">
+      <div className="d-inline-flex align-items-center">
+        <Button
+          variant="primary"
+          className="me-2 d-flex justify-content-center align-items-center"
+          style={{ fontSize: '1.5rem' }} // Adjusting to match the original size
           onClick={() => {
-            
-            if(productsLoaderData.page === 1){
+            if (productsLoaderData.page === 1) {
               return;
             }
-            handlePageChange(productsLoaderData.page - 1)
-            window.scrollTo(0, 0)
-          
+            handlePageChange(productsLoaderData.page - 1);
+            window.scrollTo(0, 0);
           }}
+          disabled={productsLoaderData.page === 1} // Disable button if on first page
         >
-          <FaCircleArrowLeft />
-        </button>
-        <button className="join-item btn text-2xl">Page {productsLoaderData.page}</button>
-        <button
-          className="join-item btn text-4xl flex justify-center"
+          <FaArrowCircleLeft />
+        </Button>
+        <Button variant="secondary" className="text-xl" disabled>
+          Page {productsLoaderData.page}
+        </Button>
+        <Button
+          variant="primary"
+          className="ms-2 d-flex justify-content-center align-items-center"
+          style={{ fontSize: '1.5rem' }} // Adjusting to match the original size
           onClick={() => {
-
-            if(productsLoaderData.productsLength < 10){
+            if (productsLoaderData.productsLength < 8) {
               return;
             }
-
-            handlePageChange(productsLoaderData.page + 1)
-            window.scrollTo(0, 0)
-          }
-          }
+            handlePageChange(productsLoaderData.page + 1);
+            window.scrollTo(0, 0);
+          }}
+          disabled={productsLoaderData.productsLength < 8} // Disable button if less than 10 products
         >
-          <FaCircleArrowRight />
-        </button>
+          <FaArrowCircleRight />
+        </Button>
       </div>
     </div>
-    </>
 
   );
 };

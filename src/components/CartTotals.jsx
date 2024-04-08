@@ -1,4 +1,5 @@
 import React from 'react'
+import { Card } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 
 const CartTotals = () => {
@@ -7,29 +8,31 @@ const CartTotals = () => {
   const tax = total / 5;
   const shipping = 50;
   return (
-    <div className='card bg-base-200'>
-      <div className='card-body'>
-        {/* SUBTOTAL */}
-        <p className='flex justify-between text-xs border-b border-base-300 pb-2 text-accent-content'>
-          <span>Subtotal</span>
-          <span className='font-medium'>${ Math.round(total) }</span>
-        </p>
-        {/* SHIPPING */}
-        <p className='flex justify-between text-xs border-b border-base-300 pb-2 text-accent-content'>
-          <span>Shipping</span>
-          <span className='font-medium'>${ shipping }</span>
-        </p>
-        {/* Tax */}
-        <p className='flex justify-between text-xs border-b border-base-300 pb-2 text-accent-content'>
-          <span>Tax 20%</span>
-          <span className='font-medium'>${Math.round(tax)}</span>
-        </p>
-        {/* Order Total */}
-        <p className='flex justify-between text-sm mt-4 pb-2 text-accent-content'>
-          <span>Order Total</span>
-          <span className='font-medium'>${ Math.round(total + shipping + tax) }</span>
-        </p>
-      </div>
+    <div className="mb-3">
+      <Card bg="light" className="shadow-sm">
+        <Card.Body>
+          {/* SUBTOTAL */}
+          <div className="d-flex justify-content-between align-items-center mb-2" style={{ borderBottom: '1px solid #e0e0e0', paddingBottom: '0.5rem' }}>
+            <span style={{ fontSize: '0.875rem' }}>Subtotal</span>
+            <span className="fw-medium">${(total).toFixed(2)}</span>
+          </div>
+          {/* SHIPPING */}
+          <div className="d-flex justify-content-between align-items-center mb-2" style={{ borderBottom: '1px solid #e0e0e0', paddingBottom: '0.5rem' }}>
+            <span style={{ fontSize: '0.875rem' }}>Shipping</span>
+            <span className="fw-medium">${shipping.toFixed(2)}</span>
+          </div>
+          {/* TAX */}
+          <div className="d-flex justify-content-between align-items-center mb-2" style={{ borderBottom: '1px solid #e0e0e0', paddingBottom: '0.5rem' }}>
+            <span style={{ fontSize: '0.875rem' }}>Tax 20%</span>
+            <span className="fw-medium">${(tax).toFixed(2)}</span>
+          </div>
+          {/* ORDER TOTAL */}
+          <div className="d-flex justify-content-between align-items-center mt-3" style={{ paddingBottom: '0.5rem' }}>
+            <span style={{ fontSize: '0.875rem' }}>Order Total</span>
+            <span className="fw-medium">${(total + shipping + tax).toFixed(2)}</span>
+          </div>
+        </Card.Body>
+      </Card>
     </div>
   )
 }

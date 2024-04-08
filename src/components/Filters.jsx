@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import FormInput from "./FormInput";
+import { Button, Row, Col } from 'react-bootstrap';
 import { Form, Link } from "react-router-dom";
 import FormRange from "./FormRange";
 import FormSelect from "./FormSelect";
@@ -9,131 +10,133 @@ import FormCheckbox from "./FormCheckbox";
 const Filters = () => {
   const [selectCategoryList, setSelectCategoryList] = useState([
     "all",
-    "shoes",
-    "slippers",
-    "heels",
-    "t-shirts",
-    "jackets",
-    "caps",
-    "shorts",
-    "sweaters",
-    "sneakers",
-    "shirts",
-    "boots",
-    "overshirts",
-    "pants",
-    "jeans",
-    "socks",
-    "belts",
-    "trainers",
+    "Aromatherapy",
+    "Fruit",
+    "Nature",
+    "Classic",
+    "Fresh",
+    "Spice",
+    "Mint",
+    "Floral",
+    "Holiday"
   ]);
-  const [selectBrandList, setSelectBrandList] = useState([
+  const [selectScentList, setSelectScentList] = useState([
     "all",
-    "WALK LONDON",
-    "Reebok",
-    "Nike",
-    "Jack & Jones",
-    "Crocs",
-    "Vans",
-    "Puma",
-    "New Balance",
-    "Tommy Jeans",
-    "Tommy Hilfiger",
-    "Bershka",
-    "New Look",
-    "AllSaints",
-    "Columbia",
-    "The North Face",
-    "Collusion",
-    "ASOS DESIGN",
-    "Topman",
-    "Dr Denim",
-    "Polo Ralph Lauren",
-    "ASOS Dark Future",
-    "Levi's",
-    "Threadbare",
-    "Calvin Klein",
-    "AAPE BY A BATHING APE®",
-    "Good For Nothing",
-    "Timberland",
-    "Pull and Bear",
-    "Koi Footwear",
-    "adidas performance",
-    "Nike Running",
-    "Dr Martens",
-    "River Island",
+    "Lavender",
+    "Citrus",
+    "Sea Salt",
+    "Vanilla",
+    "Pine",
+    "Ocean",
+    "Cinnamon",
+    "Peppermint",
+    "Jasmine",
+    "Gingerbread"
+  ]);
+  const [selectSizeList, setSelectSizeList] = useState([
+    "all",
+    "Small",
+    "Medium",
+    "Large"
+  ]);
+  const [selectColorList, setSelectColorList] = useState([
+    "all",
+    "Purple",
+    "Blue",
+    "Cream",
+    "Orange",
+    "Grean",
+    "Red",
+    "White",
+    "Brown"
   ]);
 
   return (
-    <Form className="bg-base-200 rounded-md px-8 py-4 grid gap-x-4  gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center">
-      {/* SEARCH */}
-      <FormInput
-        type="search"
-        label="search product"
-        name="search"
-        size="input-sm"
-        defaultValue=""
-      />
-      {/* CATEGORIES */}
-      <FormSelect
-        label="select category"
-        name="category"
-        list={selectCategoryList}
-        size="select-sm"
-        defaultValue="all"
-      />
-      {/* COMPANIES */}
-      <FormSelect
-        label="select brand"
-        name="brand"
-        list={selectBrandList}
-        size="select-sm"
-        defaultValue="all"
-      />
-      {/* ORDER */}
-      <FormSelect
-        label="sort by"
-        name="order"
-        list={["asc", "desc", "price high", "price low"]}
-        size="select-sm"
-        defaultValue="a-z"
-      />
-      {/* Producer */}
-      <FormSelect
-        label="Select gender"
-        name="gender"
-        list={["all", "male", "female"]}
-        size="select-sm"
-        defaultValue="all"
-      />
-      {/* PRICE */}
-      <FormRange
-        name="price"
-        label="select price"
-        size="range-sm"
-        price={300}
-      />
-      {/* Date Picker */}
-      <FormDatePicker label="select minimum production date" name="date" />
-
-      {/* In stock */}
-      <FormCheckbox
-        label="Only products in stock"
-        name="stock"
-        defaultValue="false"
-      />
-
-      {/* BUTTONS */}
-
-      <button
-        type="submit"
-        className="btn bg-blue-600 hover:bg-blue-500 text-white btn-sm"
-      >
-        search
-      </button>
-      <Link to="/shop?page=1" className="btn btn-primary btn-sm">
-        reset
-      </Link>
+    <Form className="bg-light rounded-md p-3">
+      <Row className="g-3">
+        {/* SEARCH */}
+        <Col sm={6} md={4} lg={3}>
+          <FormInput
+            type="search"
+            label="Search product"
+            name="search"
+            defaultValue=""
+          />
+        </Col>
+        {/* CATEGORIES */}
+        <Col sm={6} md={4} lg={3}>
+          <FormSelect
+            label="Select category"
+            name="category"
+            list={selectCategoryList}
+            defaultValue="all"
+          />
+        </Col>
+        {/* Scent */}
+        <Col sm={6} md={4} lg={3}>
+          <FormSelect
+            label="Select scent"
+            name="scent"
+            list={selectScentList}
+            defaultValue="all"
+          />
+        </Col>
+        {/* ORDER */}
+        <Col sm={6} md={4} lg={3}>
+          <FormSelect
+            label="Sort by"
+            name="order"
+            list={["asc", "desc", "price high", "price low"]}
+            defaultValue="a-z"
+          />
+        </Col>
+        {/* Size */}
+        <Col sm={6} md={4} lg={3}>
+          <FormSelect
+            label="Select size"
+            name="size"
+            list={selectSizeList}
+            defaultValue="all"
+          />
+        </Col>
+        {/* Color */}
+        <Col sm={6} md={4} lg={3}>
+          <FormSelect
+            label="Select color"
+            name="color"
+            list={selectColorList}
+            defaultValue="all"
+          />
+        </Col>
+        {/* PRICE */}
+        <Col sm={6} md={4} lg={3}>
+          <FormRange
+            name="price"
+            label="Select price"
+            defaultValue={10} // Assuming you adapt FormRange to accept a defaultValue or similar prop
+          />
+        </Col>
+        {/* IN STOCK */}
+        <Col sm={6} md={4} lg={3}>
+            <FormCheckbox
+                label="Only products in stock"
+                name="stock"
+                defaultValue="false"
+            />
+          
+        </Col>
+        {/* BUTTONS */}
+        <Col sm={6} md={4} lg={3} className="d-grid">
+          <Button variant="primary" type="submit">
+            Search
+          </Button>
+        </Col>
+        <Col sm={6} md={4} lg={3} className="d-grid">
+          <Link to="/shop?page=1" className="btn btn-secondary">
+            Reset
+          </Link>
+        </Col>
+      </Row>
     </Form>
   );
 };

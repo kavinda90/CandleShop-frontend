@@ -36,7 +36,7 @@ const Login = () => {
   const proceedLogin = (e) => {
     e.preventDefault();
     if (isValidate()) {
-      axios.post("http://localhost:9000/user/login", {
+      axios.post(`${process.env.REACT_APP_API}/user/login`, {
         email, password
       })
       .then((res) => {

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {SectionTitle} from "../components";
 import {toast} from "react-toastify";
 import "../styles/User.css";
@@ -13,6 +13,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const dispatch = useDispatch();
@@ -67,10 +68,11 @@ const Register = () => {
     };
 
     if (isValidate()) {
-      axios.post("http://localhost:9000/user/profile", regObj)
+      axios.post(`${process.env.REACT_APP_API}/user/profile`, regObj)
       .then((res) => {
         toast.success("Registration Successful");
         dispatch(loginUser(res.data));
+        navigate("/");
       })
       .catch((err) => {
         toast.error(err.response.data.message || err.message);

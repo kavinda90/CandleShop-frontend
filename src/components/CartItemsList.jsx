@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import CartItem from './CartItem';
+import { CartItem } from '../components';
 import { useSelector } from 'react-redux';
 
 const CartItemsList = () => {

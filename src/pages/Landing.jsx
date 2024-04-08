@@ -3,14 +3,15 @@ import "../styles/Landing.css";
 import { Hero, ProductElement, Stats } from "../components";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Container, Row, Col, Card } from 'react-bootstrap';
 
 export const landingLoader = async () => {
-  const response = await axios(
-    `http://localhost:8080/products?_page=1&_limit=8`
-  );
-  const data = response.data;
+    const response = await axios(
+        `${process.env.REACT_APP_API}/products`
+    );
+    const data = response.data;
 
-  return { products: data };
+    return { products: data };
 };
 
 const Landing = () => {
@@ -22,23 +23,24 @@ const Landing = () => {
       <Hero />
       <Stats />
 
-      <div className="selected-products">
-        <h2 className="text-6xl text-center my-12 max-md:text-4xl text-accent-content">
+      <Container className="my-5">
+        <h2 className="text-center mb-4" style={{ fontSize: '2.5rem' }}>
           Trending Products
         </h2>
-        <div className="selected-products-grid max-w-7xl mx-auto">
-          {products.map((product) => (
-            <ProductElement
-              key={product.id}
-              id={product.id}
-              title={product.name}
-              image={product.imageUrl}
-              rating={product.rating}
-              price={product.price.current.value}
-            />
+        <Row xs={1} md={2} lg={4} className="g-4">
+          {products.slice(0, 8).map((product) => (
+            <Col key={product._id}>
+              <ProductElement
+                id={product._id}
+                title={product.title}
+                image={product.images[0].url}
+                rating={product.rating}
+                price={product.bulkPricingOptions[0].pricePerUnit}
+              />
+            </Col>
           ))}
-        </div>
-      </div>
+        </Row>
+      </Container>
     </main>
   );
 };

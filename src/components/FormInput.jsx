@@ -1,17 +1,16 @@
+import { Form } from 'react-bootstrap';
+
 const FormInput = ({ label, name, type, defaultValue, size }) => {
     return (
-      <div className='form-control'>
-        <label htmlFor={name} className='label'>
-          <span className='label-text capitalize'>{label}</span>
-        </label>
-        <input
-          type={type}
-          name={name}
-          defaultValue={defaultValue}
-          className={`input input-bordered ${size}`}
-          placeholder="Search here..."
-        />
-      </div>
+      <Form.Group className="mb-3">
+      <Form.Label htmlFor={name} className="capitalize">{label}</Form.Label>
+      <Form.Control
+        type={type}
+        name={name}
+        defaultValue={defaultValue}
+        placeholder="Search here..."
+      />
+    </Form.Group>
     );
   };
   export default FormInput;
